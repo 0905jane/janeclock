@@ -12,11 +12,7 @@ const elements = {
   secondScale: document.querySelector("#secondScale"),
 };
 
-const formatter = new Intl.DateTimeFormat("ko-KR", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
+const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
 let lastAnnouncedMinute = "";
 
@@ -38,6 +34,12 @@ function pad(value) {
   return String(value).padStart(2, "0");
 }
 
+function formatKoreanDate(date) {
+  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${
+    weekdays[date.getDay()]
+  })`;
+}
+
 function updateClock() {
   const now = new Date();
   const milliseconds = now.getMilliseconds();
@@ -49,7 +51,7 @@ function updateClock() {
   document.documentElement.style.setProperty("--minute-level", clampPercent(minutes / 60));
   document.documentElement.style.setProperty("--second-level", clampPercent(seconds / 60));
 
-  elements.dateLabel.textContent = formatter.format(now);
+  elements.dateLabel.textContent = formatKoreanDate(now);
 
   const announcedMinute = `${now.getHours()}:${now.getMinutes()}`;
   if (announcedMinute !== lastAnnouncedMinute) {
